@@ -1,9 +1,11 @@
+
 {
   "name": "n8n-yelena-automation",
   "version": "1.0.0",
-  "description": "n8n instance for Inmobiliaria Yelena",
   "scripts": {
-    "start": "n8n"
+    "start": "npx n8n"
   },
-  "dependencies": {}
+  "dependencies": {
+    "n8n": "^1.100.1"
+  }
 }
