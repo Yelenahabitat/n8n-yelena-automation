@@ -1,0 +1,73 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-cursos",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "baseId": "appD4norgDpRRQac8",
+        "tableId": "Leads Profesionales",
+        "fields": {
+          "Nombre": "={{$json[\"nombre\"]}}",
+          "Email": "={{$json[\"email\"]}}",
+          "Teléfono": "={{$json[\"telefono\"]}}",
+          "Curso": "={{$json[\"curso\"]}}"
+        }
+      },
+      "name": "Registrar en Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "airtableApi": "Airtable - Yelena"
+      }
+    },
+    {
+      "parameters": {
+        "toEmail": "={{$json[\"curso\"] === \"Canva\" ? \"canva@profesionalesalinstante.com\" : \"info@profesionalesalinstante.com\"}}",
+        "subject": "Nuevo interesado en el curso de {{$json[\"curso\"]}}",
+        "text": "Has recibido un nuevo registro:\n- Nombre: {{$json[\"nombre\"]}}\n- Teléfono: {{$json[\"telefono\"]}}\n- Email: {{$json[\"email\"]}}\n- Curso: {{$json[\"curso\"]}}\n- Fecha: {{$now.toISOString()}}"
+      },
+      "name": "Enviar Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "credentials": {
+        "smtp": "SMTP Profesionales"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Registrar en Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar en Airtable": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
